@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DOMINION RANKING</title>
-  <style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
     :root {
       --platinum: linear-gradient(135deg, #e5e4e2 0%, #b8b8b8 100%);
       --gold: linear-gradient(135deg, #ffd700 0%, #daa520 100%);
@@ -510,6 +511,9 @@
         margin-bottom: 10px;
       }
     }
+    :root { --platinum: linear-gradient(135deg, #e5e4e2 0%, #b8b8b8 100%); /* ... */ }
+    body { /* ... */ }
+    /* [KEEP ALL YOUR EXISTING STYLES EXACTLY AS THEY WERE] */
   </style>
 </head>
 <body>
@@ -1286,6 +1290,100 @@
         adminLoginBtn.style.display = 'none';
       }
     }
+  </script>
+  <div class="loading-screen">...</div>
+  <div class="content-overlay">...</div>
+  <!-- [ALL YOUR MODALS AND OTHER HTML ELEMENTS REMAIN UNCHANGED] -->
+
+  <script>
+    // ================= SUPABASE SETUP ================= //
+    const SUPABASE_URL = 'https://wirjlxoansrzlpkoarkr.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndpcmpseG9hbnNyemxwa29hcmtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYxNjgxMTMsImV4cCI6MjA2MTc0NDExM30.eRhfE-y7UUhxAsnUvpAqBRtDsEw_5oQsMBGyU190WkM';
+    const supabase = createClient(https://wirjlxoansrzlpkoarkr.supabase.co', eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndpcmpseG9hbnNyemxwa29hcmtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYxNjgxMTMsImV4cCI6MjA2MTc0NDExM30.eRhfE-y7UUhxAsnUvpAqBRtDsEw_5oQsMBGyU190WkM);
+
+    // ================= UPDATED CORE LOGIC ================= //
+    let players = [];
+    let currentDivision = 'platinum';
+    let isAdmin = false;
+    const DIVISION_THRESHOLDS = { platinum: 1500, gold: 1200, silver: 900, bronze: 0 };
+
+    // Load initial data
+    async function loadPlayers() {
+      const { data, error } = await supabase
+        .from('players')
+        .select('*')
+        .order('points', { ascending: false });
+      if (!error) players = data;
+    }
+
+    // Save with data validation
+    async function savePlayers() {
+      try {
+        const formatted = players.map(p => ({
+          name: p.name,
+          wins: Number(p.wins),
+          losses: Number(p.losses),
+          points: Number(p.points),
+          division: p.division.toLowerCase(),
+          avatar: p.avatar || null
+        }));
+
+        await supabase.from('players').delete().neq('id', 0);
+        const { error } = await supabase.from('players').insert(formatted);
+        if (error) throw error;
+      } catch (e) {
+        alert('Save error: ' + e.message);
+      }
+    }
+
+    // Real-time updates
+    function setupRealtime() {
+      supabase.channel('players')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'players' }, () => {
+          loadPlayers().then(updateAllLeaderboards);
+        })
+        .subscribe();
+    }
+
+    // ================= MODIFIED INITIALIZATION ================= //
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadPlayers();
+      setupRealtime();
+      backgroundMusic.volume = 0.25;
+      
+      // Original initialization logic
+      setTimeout(() => {
+        document.querySelector('.loading-screen').style.display = 'none';
+        document.querySelector('.main-content').style.display = 'block';
+        updateAllLeaderboards();
+        checkAdminStatus();
+        switchDivision('platinum');
+      }, 3000);
+    });
+
+    // ================= UPDATED ADMIN SYSTEM ================= //
+    async function loginAdmin() {
+      const { data, error } = await supabase
+        .from('admins')
+        .select()
+        .eq('username', adminUsernameInput.value.trim())
+        .eq('password', adminPasswordInput.value);
+      
+      if (data?.length) {
+        isAdmin = true;
+        localStorage.setItem('dominionAdmin', 'true');
+        adminControls.style.display = 'block';
+        adminLoginBtn.style.display = 'none';
+        updateAllLeaderboards();
+      } else {
+        alert('Invalid credentials');
+      }
+    }
+
+    // ================= REST OF YOUR ORIGINAL FUNCTIONS ================= //
+    // KEEP ALL YOUR EXISTING FUNCTIONS EXACTLY AS THEY WERE:
+    // updateLeaderboard(), switchDivision(), addTournamentResult(), 
+    // highlightPlayers(), etc. - NO CHANGES NEEDED
   </script>
 </body>
 </html>
