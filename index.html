@@ -535,15 +535,12 @@
           <table id="platinumTable">
             <thead>
               <tr>
-                players (
-  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  name TEXT NOT NULL UNIQUE,
-  wins INT NOT NULL DEFAULT 0,
-  losses INT NOT NULL DEFAULT 0,
-  points INT NOT NULL,
-  division TEXT NOT NULL,
-  avatar TEXT
-);
+                <th>Rank</th>
+                <th>Player</th>
+                <th>Wins</th>
+                <th>Losses</th>
+                <th>Win Rate</th>
+                <th>Points</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -616,11 +613,6 @@
           </table>
         </div>
       </div>
-	  CREATE TABLE admins (
-  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-  username TEXT NOT NULL UNIQUE,
-  password TEXT NOT NULL
-);
       
       <div id="adminControls" style="display:none">
         <div class="admin-section">
@@ -755,14 +747,6 @@
   </audio>
 
   <script>
-  const playerData = {
-  name: "PlayerName",  // TEXT
-  wins: 10,            // INT
-  losses: 5,           // INT
-  points: 1500,        // INT
-  division: "gold",    // TEXT
-  avatar: "url.jpg"    // TEXT (optional)
-};
     // Player data storage
     let players = [];
     let currentDivision = 'platinum';
@@ -980,37 +964,8 @@
     }
 
     function savePlayers() {
-     async function savePlayers() {
-  try {
-    // Clear existing data
-    const { error: deleteError } = await supabase
-      .from('players')
-      .delete()
-      .neq('id', 0);
-
-    if (deleteError) throw deleteError;
-
-    // Format data for Supabase
-    const formattedPlayers = players.map(player => ({
-      name: player.name,
-      wins: Number(player.wins),
-      losses: Number(player.losses),
-      points: Number(player.points),
-      division: player.division.toLowerCase(),
-      avatar: player.avatar || null
-    }));
-
-    // Insert fresh data
-    const { error: insertError } = await supabase
-      .from('players')
-      .insert(formattedPlayers);
-
-    if (insertError) throw insertError;
-  } catch (error) {
-    console.error('Database error:', error);
-    alert('Error saving data: ' + error.message);
-  }
-}
+      localStorage.setItem('dominionPlayers', JSON.stringify(players));
+    }
 
     function updateAllLeaderboards() {
       updateLeaderboard('platinum');
@@ -1184,27 +1139,7 @@
       return false; // Division stayed the same
     }
 
-     function addNewPlayer() {
-  // ... existing code ...
-
-  // Add validation
-  if (isNaN(startingPoints)) {
-    alert('Invalid points value');
-    return;
-  }
-
-  // Force number types
-  const newPlayer = {
-    name,
-    wins: 0,
-    losses: 0,
-    points: Number(startingPoints),
-    division,
-    avatar: avatarPreview.src.includes('placeholder.com') ? null : avatarPreview.src
-  };
-
-  // ... rest of the function ...
-}{
+    function addNewPlayer() {
       const name = playerNameInput.value.trim();
       const division = playerDivisionSelect.value;
       
