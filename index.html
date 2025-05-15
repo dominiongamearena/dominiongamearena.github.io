@@ -1,11 +1,19 @@
 <!DOCTYPE html>
+                <th>Win Rate</th>
+!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DOMINION RANKING</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
+  <style>
+  @media (max-width: 480px) {
+  .division-tab {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  
+} 
     :root {
       --platinum: linear-gradient(135deg, #e5e4e2 0%, #b8b8b8 100%);
       --gold: linear-gradient(135deg, #ffd700 0%, #daa520 100%);
@@ -483,7 +491,12 @@
       }
     }
 
-    @media (max-width: 480px) {
+   @media (max-width: 480px) {
+  .division-tab {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}
       table {
         display: block;
         overflow-x: auto;
@@ -511,9 +524,6 @@
         margin-bottom: 10px;
       }
     }
-    :root { --platinum: linear-gradient(135deg, #e5e4e2 0%, #b8b8b8 100%); /* ... */ }
-    body { /* ... */ }
-    /* [KEEP ALL YOUR EXISTING STYLES EXACTLY AS THEY WERE] */
   </style>
 </head>
 <body>
@@ -784,27 +794,54 @@
       bronze: 'bronze-bg'
     };
 
-    // Initialize with some sample data if localStorage is empty
-    if(localStorage.getItem('dominionPlayers')) {
-      players = JSON.parse(localStorage.getItem('dominionPlayers'));
-    } else {
-      players = [
-        { name: 'ShadowX', wins: 25, losses: 5, points: 1800, division: 'platinum', avatar: 'https://randomuser.me/api/portraits/men/1.jpg' },
-        { name: 'Blaze', wins: 22, losses: 8, points: 1650, division: 'platinum', avatar: 'https://randomuser.me/api/portraits/men/2.jpg' },
-        { name: 'Ghost', wins: 20, losses: 10, points: 1550, division: 'platinum', avatar: 'https://randomuser.me/api/portraits/men/3.jpg' },
-        { name: 'Phoenix', wins: 18, losses: 12, points: 1450, division: 'gold', avatar: 'https://randomuser.me/api/portraits/women/1.jpg' },
-        { name: 'Viper', wins: 15, losses: 15, points: 1300, division: 'gold', avatar: 'https://randomuser.me/api/portraits/women/2.jpg' },
-        { name: 'Raven', wins: 12, losses: 18, points: 1150, division: 'gold', avatar: 'https://randomuser.me/api/portraits/women/3.jpg' },
-        { name: 'Wolf', wins: 10, losses: 20, points: 950, division: 'silver', avatar: 'https://randomuser.me/api/portraits/men/4.jpg' },
-        { name: 'Bear', wins: 8, losses: 22, points: 850, division: 'silver', avatar: 'https://randomuser.me/api/portraits/men/5.jpg' },
-        { name: 'Hawk', wins: 5, losses: 25, points: 750, division: 'silver', avatar: 'https://randomuser.me/api/portraits/women/4.jpg' },
-        { name: 'Fox', wins: 3, losses: 27, points: 600, division: 'bronze', avatar: 'https://randomuser.me/api/portraits/women/5.jpg' },
-        { name: 'TestPlayer1', wins: 7, losses: 3, points: 1100, division: 'silver', avatar: 'https://randomuser.me/api/portraits/men/6.jpg' },
-        { name: 'TestPlayer2', wins: 2, losses: 8, points: 700, division: 'bronze', avatar: 'https://randomuser.me/api/portraits/women/6.jpg' }
-      ];
-      savePlayers();
+    // Initialize with some sample data if lo
+  if(localStorage.getItem('dominionPlayers')) {
+  players = JSON.parse(localStorage.getItem('dominionPlayers'));
+} else {
+  players = [
+    { 
+      name: "IPPA WRLDS",
+      wins: 6,
+      losses: 0,
+      points: 1600,  // Must be ≥1500 for Platinum
+      division: "platinum",
+      avatar: "IPPA WRLDS.jpg"
+    },
+    { 
+      name: "JOSHY",
+      wins: 4,
+      losses: 1,
+      points: 1550,  // Must be ≥1500 for Platinum
+      division: "platinum",
+      avatar: "joshy.png"
+    },
+    { 
+      name: "WAGABA",
+      wins: 3,
+      losses: 2,
+      points: 1550,  // This would actually be Gold division (1200-1499)
+      division: "platinum",  // Force to platinum for demo
+      avatar: "wagwaba.jpg"
+    },
+    { 
+      name: "KENO",
+      wins: 5,
+      losses: 1,
+      points: 1620,
+      division: "platinum",
+      avatar: "KENO.jpg"
     }
+  ];
+  savePlayers();
+}
 
+// In updateLeaderboard() function - ADD DEBUGGING
+function updateLeaderboard(division) {
+  console.log(`Updating ${division} leaderboard with players:`, 
+    players.filter(p => p.division === division));
+  
+  // Rest of the function remains the same
+}
     // DOM elements
     const leaderboardBodies = {
       platinum: document.getElementById('platinumBody'),
@@ -1143,22 +1180,22 @@
       return false; // Division stayed the same
     }
 
-    function addNewPlayer() {
-      const name = playerNameInput.value.trim();
-      const division = playerDivisionSelect.value;
-      
-      if (!name) {
-        alert('Please enter a player name');
-        return;
-      }
-      
+   function addNewPlayer() {
+  const name = playerNameInput.value.trim();
+  const division = playerDivisionSelect.value;
+  
+  if (!name) {
+    alert('Please enter a player name');
+    return;
+  }
+     
       // Case-insensitive check
       if (players.some(p => p.name.toLowerCase() === name.toLowerCase())) {
         alert('Player with this name already exists!');
         return;
       }
       
-      const startingPoints = DIVISION_THRESHOLDS[division] - 100;
+      const startingPoints = Math.max(DIVISION_THRESHOLDS[division] - 100, 0);
       const avatar = avatarPreview.src.includes('placeholder.com') 
         ? 'https://via.placeholder.com/40' 
         : avatarPreview.src;
@@ -1290,100 +1327,6 @@
         adminLoginBtn.style.display = 'none';
       }
     }
-  </script>
-  <div class="loading-screen">...</div>
-  <div class="content-overlay">...</div>
-  <!-- [ALL YOUR MODALS AND OTHER HTML ELEMENTS REMAIN UNCHANGED] -->
-
-  <script>
-    // ================= SUPABASE SETUP ================= //
-    const SUPABASE_URL = 'https://wirjlxoansrzlpkoarkr.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndpcmpseG9hbnNyemxwa29hcmtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYxNjgxMTMsImV4cCI6MjA2MTc0NDExM30.eRhfE-y7UUhxAsnUvpAqBRtDsEw_5oQsMBGyU190WkM';
-    const supabase = createClient(https://wirjlxoansrzlpkoarkr.supabase.co', eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndpcmpseG9hbnNyemxwa29hcmtyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYxNjgxMTMsImV4cCI6MjA2MTc0NDExM30.eRhfE-y7UUhxAsnUvpAqBRtDsEw_5oQsMBGyU190WkM);
-
-    // ================= UPDATED CORE LOGIC ================= //
-    let players = [];
-    let currentDivision = 'platinum';
-    let isAdmin = false;
-    const DIVISION_THRESHOLDS = { platinum: 1500, gold: 1200, silver: 900, bronze: 0 };
-
-    // Load initial data
-    async function loadPlayers() {
-      const { data, error } = await supabase
-        .from('players')
-        .select('*')
-        .order('points', { ascending: false });
-      if (!error) players = data;
-    }
-
-    // Save with data validation
-    async function savePlayers() {
-      try {
-        const formatted = players.map(p => ({
-          name: p.name,
-          wins: Number(p.wins),
-          losses: Number(p.losses),
-          points: Number(p.points),
-          division: p.division.toLowerCase(),
-          avatar: p.avatar || null
-        }));
-
-        await supabase.from('players').delete().neq('id', 0);
-        const { error } = await supabase.from('players').insert(formatted);
-        if (error) throw error;
-      } catch (e) {
-        alert('Save error: ' + e.message);
-      }
-    }
-
-    // Real-time updates
-    function setupRealtime() {
-      supabase.channel('players')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'players' }, () => {
-          loadPlayers().then(updateAllLeaderboards);
-        })
-        .subscribe();
-    }
-
-    // ================= MODIFIED INITIALIZATION ================= //
-    document.addEventListener('DOMContentLoaded', async () => {
-      await loadPlayers();
-      setupRealtime();
-      backgroundMusic.volume = 0.25;
-      
-      // Original initialization logic
-      setTimeout(() => {
-        document.querySelector('.loading-screen').style.display = 'none';
-        document.querySelector('.main-content').style.display = 'block';
-        updateAllLeaderboards();
-        checkAdminStatus();
-        switchDivision('platinum');
-      }, 3000);
-    });
-
-    // ================= UPDATED ADMIN SYSTEM ================= //
-    async function loginAdmin() {
-      const { data, error } = await supabase
-        .from('admins')
-        .select()
-        .eq('username', adminUsernameInput.value.trim())
-        .eq('password', adminPasswordInput.value);
-      
-      if (data?.length) {
-        isAdmin = true;
-        localStorage.setItem('dominionAdmin', 'true');
-        adminControls.style.display = 'block';
-        adminLoginBtn.style.display = 'none';
-        updateAllLeaderboards();
-      } else {
-        alert('Invalid credentials');
-      }
-    }
-
-    // ================= REST OF YOUR ORIGINAL FUNCTIONS ================= //
-    // KEEP ALL YOUR EXISTING FUNCTIONS EXACTLY AS THEY WERE:
-    // updateLeaderboard(), switchDivision(), addTournamentResult(), 
-    // highlightPlayers(), etc. - NO CHANGES NEEDED
   </script>
 </body>
 </html>
