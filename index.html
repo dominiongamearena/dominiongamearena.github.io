@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+   <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DOMINION RANKING</title>
   <style>
@@ -759,6 +761,13 @@
   </audio>
 
   <script>
+  const APP_VERSION = "v1.0.2"; // Change this every time you update the site
+
+if (localStorage.getItem("dominionAppVersion") !== APP_VERSION) {
+  localStorage.setItem("dominionAppVersion", APP_VERSION);
+  location.reload(true);
+}
+
     // Player data storage
     let players = [];
     let currentDivision = 'platinum';
@@ -799,36 +808,116 @@
   players = [
     { 
       name: "IPPA WRLDS",
-      wins: 6,
+      wins: 13,
       losses: 0,
-      points: 1620,  // Must be ≥1500 for Platinum
+      points: 1700,  // Must be ≥1500 for Platinum
       division: "platinum",
       avatar: "IPPA WRLDS.jpg"
     },
     { 
       name: "JOSHY",
-      wins: 4,
-      losses: 1,
-      points: 1550,  // Must be ≥1500 for Platinum
-      division: "platinum",
+      wins: 5,
+      losses: 10,
+      points: 700,  // Force to gold for demo
+      division: "silver",
       avatar: "joshy.png"
     },
     { 
       name: "WAGABA",
       wins: 3,
       losses: 2,
-      points: 1500,  // This would actually be Gold division (1200-1499)
-      division: "platinum",  // Force to platinum for demo
+      points: 150,  // This would actually be Gold division (1200-1499)
+      division: "bronze",  // Force to bronze for demo
       avatar: "wagwaba.jpg"
     },
     { 
       name: "KENO",
-      wins: 5,
-      losses: 1,
+      wins: 11,
+      losses: 4,
       points: 1600,
       division: "platinum",
       avatar: "KENO.jpg"
-    }
+    },
+	{ 
+      name: "MASH",
+      wins: 10,
+      losses: 5,
+      points: 1550,
+      division: "platinum",
+      avatar: "joshy.png"
+    },
+	{ 
+      name: "HASH",
+      wins: 9,
+      losses: 6,
+      points: 1500,
+      division: "platinum",
+      avatar: "joshy.png"
+    },
+	{ 
+      name: "STUPENDOUS SAM",
+      wins: 8,
+      losses: 7,
+      points: 1200,
+      division: "gold",
+      avatar: "joshy.png"
+    },
+	{ 
+      name: "Frank PSN",
+      wins: 7,
+      losses: 8,
+      points: 1100,
+      division: "gold",
+      avatar: "joshy.png"
+    },
+	{ 
+      name: "T",
+      wins: 6,
+      losses: 9,
+      points: 900,
+      division: "gold",
+      avatar: "joshy.png"
+    },
+	{ 
+      name: "Konrad",
+      wins: 1,
+      losses: 11,
+      points: 290,
+      division: "bronze",
+      avatar: "joshy.png"
+    },
+	{ 
+      name: "Mark",
+      wins: 1,
+      losses: 10,
+      points: 520,
+      division: "silver",
+      avatar: "joshy.png"
+    },
+	{ 
+      name: "Darius",
+      wins: 0,
+      losses: 11,
+      points: 250,
+      division: "bronze",
+      avatar: "joshy.png"
+    },
+	{ 
+      name: "Joooo",
+      wins: 0,
+      losses: 12,
+      points: 120,
+      division: "bronze",
+      avatar: "joshy.png"
+    },
+	{ 
+      name: "Horny Spirit",
+      wins: 0,
+      losses: 0,
+      points: 100,
+      division: "bronze",
+      avatar: "joshy.png"
+    },
   ];
   savePlayers();
 }
